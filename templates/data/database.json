@@ -1,0 +1,55 @@
+{
+  "id_transaksi": "ad92ed91-36e5-48ec-9adf-81287abbf16a",
+  "tanggal": "2024-03-18 20:47:01",
+  "hari": "Monday",
+  "bulan": "March",
+  "tahun": "2024",
+  "totalHarga": "297000",
+  "totalQuantity": "6",
+  "menus": [
+    {
+      "nama": "Meat Lover",
+      "harga": 49500,
+      "jumlah": 1
+    },
+    {
+      "nama": "Super Supreme",
+      "harga": 49500,
+      "jumlah": 1
+    },
+    {
+      "nama": "Tuna Melt",
+      "harga": 49500,
+      "jumlah": 4
+    }
+  ]
+}
+{
+  "id_transaksi": "dcfc10e7-522b-45e3-9d68-95454978b67a",
+  "tanggal": "2024-03-18 20:48:24",
+  "hari": "Monday",
+  "bulan": "March",
+  "tahun": "2024",
+  "totalHarga": "7078500",
+  "totalQuantity": "143",
+  "menus": [
+    {
+      "nama": "Meat Lover",
+      "harga": 49500,
+      "jumlah": 31
+    },
+    {
+      "nama": "Tuna Melt",
+      "harga": 49500,
+      "jumlah": 1
+    },
+    {
+      "nama": "American Favourite",
+      "harga": 49500,
+      "jumlah": 111
+    }
+  ]
+}{"id_transaksi": "69f4c13d-a6b9-4280-86d6-35072caf29e5", "tanggal": "2024-03-27 08:48:29", "hari": "Wednesday", "bulan": "March", "tahun": "2024", "totalHarga": "49500", "totalQuantity": "1", "menus": [{"nama": "Meat Lover", "harga": 49500, "jumlah": 1}]}
+{"id_transaksi": "a37c193f-9406-427c-9c4a-644e67a0ee70", "tanggal": "2024-03-27 10:12:58", "hari": "Wednesday", "bulan": "March", "tahun": "2024", "totalHarga": "49500", "totalQuantity": "1", "menus": [{"nama": "Meat Lover", "harga": 49500, "jumlah": 1}]}
+{"id_transaksi": "ba0365c7-5569-4da7-99d0-7dd581e94dc0", "tanggal": "2024-03-27 10:14:29", "hari": "Wednesday", "bulan": "March", "tahun": "2024", "totalHarga": "43000", "totalQuantity": "1", "menus": [{"nama": "Creamy Beef Fettuccine", "harga": 43000, "jumlah": 1}]}
+{"id_transaksi": "5bbdec01-293f-41a2-99d2-c1e304c6e225", "tanggal": "2024-03-27 20:26:28", "hari": "Wednesday", "bulan": "March", "tahun": "2024", "totalHarga": "49500", "totalQuantity": "1", "menus": [{"nama": "Meat Lover", "harga": 49500, "jumlah": 1}]}

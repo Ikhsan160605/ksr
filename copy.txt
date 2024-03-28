@@ -1,0 +1,164 @@
+from flask import Flask, render_template, jsonify, request
+from midtransclient import CoreApi
+import json
+import os
+import uuid
+
+app = Flask(__name__)
+
+# Atur kunci API dari Midtrans
+core = CoreApi(
+    is_production=False,
+    server_key='SB-Mid-server-YsCycVU2yPG1pQVs0LkfQoMd',
+    client_key='SB-Mid-client-OZMRbYwO_9h3ehv8'
+)
+
+# Dapatkan jalur lengkap ke folder 'templates'
+template_dir = os.path.abspath('templates')
+
+
+def save_order_data(total_price, total_quantity, menus):
+    order_data = {
+        "totalPrice": total_price,
+        "totalQuantity": total_quantity,
+        "menus": menus
+    }
+    with open('templates/data/order_data.json', 'w') as file:
+        json.dump(order_data, file)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/pembayaran.html')
+def pembayaran():
+    # Dapatkan total harga dan total jumlah pesanan dari parameter URL
+    total_harga = request.args.get('total')
+    total_jumlah_pesanan = request.args.get('quantity')
+    # Ambil data menu dari file pizza.json
+    with open('templates/data/pizza.json', 'r') as file:
+        menus = json.load(file)
+    # Render pembayaran.html dengan membawa total harga, total jumlah pesanan, dan data menu
+    return render_template('pembayaran.html', total_harga=total_harga, total_jumlah_pesanan=total_jumlah_pesanan, menus=menus)
+
+
+@app.route('/get_pizza_data')
+def get_pizza_data():
+    try:
+        with open('templates/data/pizza.json', 'r') as file:
+            pizza_data = json.load(file)
+        return jsonify(pizza_data)
+    except Exception as e:
+        return str(e)
+    
+    
+@app.route('/update_total_price', methods=['POST'])
+def update_total_price():
+    try:
+        # Ambil data total harga dari request
+        total_harga_data = request.get_json()
+
+        # Simpan data total harga ke dalam file database.json
+        with open('templates/data/database.json', 'w') as file:
+            json.dump(total_harga_data, file)
+
+        # Respon sukses
+        return jsonify({"status": "success", "message": "Total harga berhasil diperbarui"})
+    except Exception as e:
+        # Respon error
+        return jsonify({"status": "error", "message": str(e)})
+
+@app.route('/update_total_quantity', methods=['POST'])
+def update_total_quantity():
+    try:
+        # Ambil data total jumlah pesanan dari request
+        total_quantity_data = request.get_json()
+
+        # Simpan data total jumlah pesanan ke dalam file database.json
+        with open('templates/data/database.json', 'w') as file:
+            json.dump(total_quantity_data, file)
+
+        # Respon sukses
+        return jsonify({"status": "success", "message": "Total jumlah pesanan berhasil diperbarui"})
+    except Exception as e:
+        # Respon error
+        return jsonify({"status": "error", "message": str(e)})
+
+@app.route('/bayar', methods=['POST'])
+def bayar():
+    try:
+        # Ambil data total harga dari request
+        total_harga_data = request.get_json()
+
+        # Lakukan operasi yang sesuai dengan data total harga, misalnya menyimpannya ke database
+        total_harga = total_harga_data['totalHarga']
+
+        # Respon sukses
+        return jsonify({"status": "success", "message": "Total harga diterima dan diproses"})
+    except Exception as e:
+        # Respon error jika terjadi kesalahan
+        return jsonify({"status": "error", "message": str(e)})
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    try:
+        # Ambil data pembayaran dari request
+        pembayaran_data = request.get_json()
+
+        # Lakukan pembayaran dengan Midtrans API
+        charge_params = {
+            'payment_type': 'gopay',  # Metode pembayaran menggunakan GoPay
+            'transaction_details': {
+                'order_id': 'ORDER-' + str(uuid.uuid4()),
+                'gross_amount': int(pembayaran_data['total'])
+            },
+            'customer_details': {
+                'first_name': 'Nama Depan',
+                'last_name': 'Nama Belakang',
+                'email': 'contoh@example.com',
+                'phone': '081234567890'
+            }
+        }
+        charge_response = core.charge(charge_params)
+
+        # Simpan data pembayaran ke dalam file order_data.json
+        save_order_data(pembayaran_data["total"], pembayaran_data["quantity"], pembayaran_data["menus"])
+
+        # Kirim URL redirect dari Midtrans ke client
+        return jsonify({'redirect_url': charge_response['redirect_url']})
+    except Exception as e:
+        # Respon error
+        return jsonify({"status": "error", "message": str(e)})
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+const checkoutButton = document.getElementById("checkoutButton");
+if (checkoutButton) {
+    checkoutButton.addEventListener("click", function () {
+        // Kirim data total harga ke server
+        fetch('/bayar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                totalHarga: totalHarga
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle response from server if needed
+            console.log(data);
+        })
+        .catch(error => console.error("Error:", error));
+    });
+}
+
+
+});
